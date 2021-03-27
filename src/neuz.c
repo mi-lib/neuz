@@ -122,8 +122,9 @@ static bool _nzNeuronBackPropagate(nzNeuron *neuron)
 {
   nzAxon *ap;
 
+  neuron->data._p *= neuron->data._v;
   for( ap=neuron->data.axon; ap; ap=ap->next ){
-    ((nzNeuron *)ap->upstream)->data._p += neuron->data._p * ap->weight * ((nzNeuron *)ap->upstream)->data._v;
+    ((nzNeuron *)ap->upstream)->data._p += neuron->data._p * ap->weight;
     ap->_dw += neuron->data._p * ((nzNeuron *)ap->upstream)->data.output;
   }
   neuron->data._db += neuron->data._p;
@@ -413,7 +414,7 @@ static bool _nzNetInitP(nzNet *net, zVec input, zVec des, double (* lossgrad)(zV
   nzNetGetOutput( net, output );
   _nzNetInitParam( net );
   zListForEach( nzNetOutputLayer(net), np )
-    np->data._p = lossgrad( output, des, i++ ) * np->data._v;
+    np->data._p = lossgrad( output, des, i++ );
   zVecFree( output );
   return true;
 }

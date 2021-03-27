@@ -217,11 +217,11 @@ based on the above back-propagation is as follows.
 \For{$n=N$ downto $2$} \Comment{Backpropagation}
   \For{$i\in\mathbb{U}_{n}$}
     \State $p_{i}\leftarrow p_{i}v_{i}$
-    \State $\varDelta d_{i}\leftarrow\varDelta d_{i}+p_{i}$
     \For{$j\in\mathbb{S}_{i}$}
       \State $p_{j}\leftarrow p_{j}+p_{i}w_{ij}$
       \State $\varDelta w_{ij}\leftarrow\varDelta w_{ij}+p_{i}y_{j}$
     \EndFor
+    \State $\varDelta d_{i}\leftarrow\varDelta d_{i}+p_{i}$
   \EndFor
 \EndFor
 \end{algorithmic}
