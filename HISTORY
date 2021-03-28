@@ -1,4 +1,12 @@
-2021. 3.27. Corrected document about backpropagation.
-2021. 3.27. Debugged backpropagation.
+2021. 3.28. Added nzNetRegZTK, nzNetFromZTK and nzNetReadZTK. [neuz]
+2021. 3.28. Added nzNetConnect. [neuz]
+2021. 3.28. Added nzNetAddNeuron. [neuz]
+2021. 3.28. Modified specification of nzNeuronInit and nzNeuronGroupInit. [neuz]
+2021. 3.28. Added nzNeuronGroupFindNeuron and nzNetFindNeuron. [neuz]
+2021. 3.28. Added nzNetFPrintZTK and nzNetWriteZTK. [neuz]
+2021. 3.28. Modified nzNetFindGroup. [neuz]
+2021. 3.28. Modified specifications of nzNeuron and nzNeuronGroup classes. [neuz]
+2021. 3.27. Corrected document about backpropagation. [neuz]
+2021. 3.27. Debugged backpropagation. [neuz]
 2020.10.29. Restarted.
 2004. 7.24. Created.

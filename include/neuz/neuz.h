@@ -17,6 +17,7 @@ __BEGIN_DECLS
 
 /*! \brief activator function class */
 typedef struct{
+  char *typestr;         /* a string to represent type */
   double (* f)(double);  /* function */
   double (* df)(double); /* derivative function */
 } nzActivator;
@@ -36,6 +37,9 @@ __EXPORT double nzActivatorReLU(double val);
 __EXPORT double nzActivatorReLUDif(double val);
 extern nzActivator nz_activator_relu;
 
+/*! \brief assign an activator function queried by a string. */
+__EXPORT nzActivator *nzActivatorQueryAssign(char *str);
+
 /*! \brief axon class */
 typedef struct _nzAxon{
   double weight;
@@ -46,6 +50,8 @@ typedef struct _nzAxon{
 
 /*! \brief unit neuron class */
 typedef struct _nzNeuronData{
+  int gid; /* group identifier */
+  int nid; /* neuron identifier */
   double input;
   double output;
   double bias;
@@ -56,17 +62,17 @@ typedef struct _nzNeuronData{
   nzAxon *axon;
 } nzNeuronData;
 
-/*! \brief neuron group class */
-zListClass( nzNeuronGroup, nzNeuron, nzNeuronData );
+/*! \brief neuron list class */
+zListClass( nzNeuronList, nzNeuron, nzNeuronData );
 
 /*! \brief initialize a new neuron unit. */
-__EXPORT nzNeuron *nzNeuronInit(nzNeuron *neuron);
+__EXPORT nzNeuron *nzNeuronInit(nzNeuron *neuron, int gid, int nid);
 
 /*! \brief destroy a neuron unit. */
 __EXPORT void nzNeuronDestroy(nzNeuron *neuron);
 
 /*! \brief connect two neuron units. */
-__EXPORT bool nzNeuronConnect(nzNeuron *nu, nzNeuron *nd);
+__EXPORT bool nzNeuronConnect(nzNeuron *nu, nzNeuron *nd, double weight);
 
 /*! \brief propagate output values of upstream units to downstream. */
 __EXPORT double nzNeuronPropagate(nzNeuron *neuron);
@@ -74,8 +80,14 @@ __EXPORT double nzNeuronPropagate(nzNeuron *neuron);
 /*! \brief print a neuron unit. */
 __EXPORT void nzNeuronFPrint(FILE *fp, nzNeuron *neuron);
 
+/*! \brief neuron group class */
+typedef struct{
+  int id; /* identifier */
+  nzNeuronList list;
+} nzNeuronGroup;
+
 /*! \brief initialize a neuron group. */
-#define nzNeuronGroupInit(ng) zListInit( ng )
+__EXPORT nzNeuronGroup *nzNeuronGroupInit(nzNeuronGroup *ng, int id);
 
 /*! \brief add a neuron into a group. */
 __EXPORT bool nzNeuronGroupAddOne(nzNeuronGroup *ng);
@@ -85,6 +97,9 @@ __EXPORT bool nzNeuronGroupAdd(nzNeuronGroup *ng, int num);
 
 /*! \brief destroy a neuron group. */
 __EXPORT void nzNeuronGroupDestroy(nzNeuronGroup *ng);
+
+/*! \brief find a neuron in a neuron group. */
+__EXPORT nzNeuron *nzNeuronGroupFindNeuron(nzNeuronGroup *ng, int gid, int nid);
 
 /*! \brief set activator functions of units in a neuron group. */
 __EXPORT void nzNeuronGroupSetActivator(nzNeuronGroup *ng, nzActivator *activator);
@@ -120,10 +135,19 @@ __EXPORT bool nzNetAddGroupSetActivator(nzNet *net, int num, nzActivator *activa
 __EXPORT void nzNetDestroy(nzNet *net);
 
 /*! \brief find a neuron group in a neural network. */
-__EXPORT nzNeuronGroup *nzNetFindGroup(nzNet *net, int i);
+__EXPORT nzNeuronGroup *nzNetFindGroup(nzNet *net, int id);
+
+/*! \brief find a neuron in a neural network. */
+__EXPORT nzNeuron *nzNetFindNeuron(nzNet *net, int gid, int nid);
+
+/*! \brief add a neuron to a neural network. */
+__EXPORT bool nzNetAddNeuron(nzNet *net, int gid, int nid, nzActivator *activator, double bias);
 
 /*! \brief connect two neuron groups in a neural network. */
 __EXPORT bool nzNetConnectGroup(nzNet *net, int iu, int id);
+
+/*! \brief connects two neurons in a neural network. */
+__EXPORT bool nzNetConnect(nzNet *net, int ugid, int unid, int dgid, int dnid, double weight);
 
 /*! \brief set input values to the input layer of a neural network. */
 __EXPORT bool nzNetSetInput(nzNet *net, zVec input);
@@ -145,6 +169,25 @@ __EXPORT bool nzNetTrainSDM(nzNet *net, double rate);
 
 /*! \brief print a neural network. */
 __EXPORT void nzNetFPrint(FILE *fp, nzNet *net);
+
+/* parse ZTK format */
+
+#define NZ_NET_TAG "neuralnetwork"
+
+/*! \brief register a definition of tag-and-keys for a neural network to a ZTK format processor. */
+__EXPORT bool nzNetRegZTK(ZTK *ztk, char *tag);
+
+/*! \brief read a neural network from a ZTK format processor. */
+__EXPORT nzNet *nzNetFromZTK(nzNet *net, ZTK *ztk);
+
+/*! \brief read a neural network from a ZTK format file. */
+__EXPORT nzNet *nzNetReadZTK(nzNet *net, char filename[]);
+
+/*! \brief print out a neural network to a file. */
+__EXPORT void nzNetFPrintZTK(FILE *fp, nzNet *net);
+
+/*! \brief write a neural network to a ZTK format file. */
+__EXPORT bool nzNetWriteZTK(nzNet *net, char filename[]);
 
 __END_DECLS
 

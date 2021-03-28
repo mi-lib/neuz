@@ -25,6 +25,10 @@ int main(int argc, char *argv[])
   nzNetGetOutput( &nn, output );
   zVecPrint( output );
 
+  getchar();
+
+  nzNetFPrintZTK( stdout, &nn );
+
   nzNetDestroy( &nn );
   zVecFree( input );
   zVecFree( output );

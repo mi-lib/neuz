@@ -77,6 +77,8 @@ int main(int argc, char *argv[])
   test( &nn, input, output, 0, 1 );
   test( &nn, input, output, 1, 1 );
 
+  nzNetWriteZTK( &nn, "xor.ztk" );
+
   nzNetDestroy( &nn );
   zVecFreeAO( 3, input, output, des );
   return 0;

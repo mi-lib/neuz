@@ -4,7 +4,9 @@
 
 #include <neuz/neuz.h>
 
+#define NEUZ_ERR_UNKNOWN_ACTIVATOR "unknown activator type: %s"
 #define NEUZ_ERR_GROUP_NOT_FOUND "neuron group %d not found"
+#define NEUZ_ERR_NEURON_NOT_FOUND "neuron %d:%d not found"
 #define NEUZ_WARN_GROUP_MISMATCH_SIZ "size mismatch between a neuron group (%d) and a vector (%d)"
 #define NEUZ_WARN_NET_TOOFEWLAYER "cannot apply backpropagation to a two-or-less-layered network."
 
@@ -12,6 +14,7 @@
 
 /* step function */
 nzActivator nz_activator_step = {
+  "step",
   nzActivatorStep,
   nzActivatorStepDif
 };
@@ -21,6 +24,7 @@ double nzActivatorStepDif(double val){ return 0; /* case val=0 is ignored. */ }
 
 /* sigmoid function */
 nzActivator nz_activator_sigmoid = {
+  "sigmoid",
   nzActivatorSigmoid,
   nzActivatorSigmoidDif
 };
@@ -34,6 +38,7 @@ double nzActivatorSigmoidDif(double val){
 
 /* rectified linear unit function */
 nzActivator nz_activator_relu = {
+  "relu",
   nzActivatorReLU,
   nzActivatorReLUDif
 };
@@ -41,12 +46,34 @@ nzActivator nz_activator_relu = {
 double nzActivatorReLU(double val){ return zMax( val, 0 ); }
 double nzActivatorReLUDif(double val){ return val >= 0 ? 1 : 0; /* case val=0 is ignored. */ }
 
+/* add the handle to the following list when you create a new activator function. */
+#define NZ_ACTIVATOR_ARRAY \
+  nzActivator *_nz_activator[] = {\
+    &nz_activator_step,\
+    &nz_activator_sigmoid,\
+    &nz_activator_relu,\
+    NULL,\
+  }
+
+/* query an activator function by a string. */
+nzActivator *nzActivatorQuery(char *str)
+{
+  NZ_ACTIVATOR_ARRAY;
+  nzActivator **activator;
+
+  for( activator=_nz_activator; *activator; activator++ )
+    if( strcmp( (*activator)->typestr, str ) == 0 ) return *activator;
+  return NULL;
+}
+
 /* unit neuron class */
 
 /* initialize a new neuron unit. */
-nzNeuron *nzNeuronInit(nzNeuron *neuron)
+nzNeuron *nzNeuronInit(nzNeuron *neuron, int gid, int nid)
 {
   zListCellInit( neuron );
+  neuron->data.gid = gid;
+  neuron->data.nid = nid;
   neuron->data.input = 0;
   neuron->data.output = 0;
   neuron->data.bias = zRandF( -1, 1 );
@@ -70,7 +97,7 @@ void nzNeuronDestroy(nzNeuron *neuron)
 }
 
 /* connect two neuron units. */
-bool nzNeuronConnect(nzNeuron *nu, nzNeuron *nd)
+bool nzNeuronConnect(nzNeuron *nu, nzNeuron *nd, double weight)
 {
   nzAxon *axon;
 
@@ -79,7 +106,7 @@ bool nzNeuronConnect(nzNeuron *nu, nzNeuron *nd)
     return false;
   }
   axon->upstream = nu;
-  axon->weight = zRandF( -1, 1 );
+  axon->weight = weight;
   axon->_dw = 0;
   axon->next = nd->data.axon;
   nd->data.axon = axon;
@@ -147,12 +174,20 @@ void nzNeuronFPrint(FILE *fp, nzNeuron *neuron)
 {
   nzAxon *ap;
 
-  fprintf( fp, "<%p> (%.10g)\n", neuron, neuron->data.bias );
+  fprintf( fp, "<%p> [#%d:%d] (%.10g)\n", neuron, neuron->data.gid, neuron->data.nid, neuron->data.bias );
   for( ap=neuron->data.axon; ap; ap=ap->next )
     fprintf( fp, "  |-(%.10g)<- <%p>\n", ap->weight, ap->upstream );
 }
 
 /* neuron group class */
+
+/* initialize a neuron group. */
+nzNeuronGroup *nzNeuronGroupInit(nzNeuronGroup *ng, int id)
+{
+  ng->id = id;
+  zListInit( &ng->list );
+  return ng;
+}
 
 /* add a neuron into a group. */
 bool nzNeuronGroupAddOne(nzNeuronGroup *ng)
@@ -163,8 +198,8 @@ bool nzNeuronGroupAddOne(nzNeuronGroup *ng)
     ZALLOCERROR();
     return false;
   }
-  nzNeuronInit( neuron );
-  zListInsertHead( ng, neuron );
+  nzNeuronInit( neuron, ng->id, zListSize(&ng->list) );
+  zListInsertHead( &ng->list, neuron );
   return true;
 }
 
@@ -181,11 +216,21 @@ void nzNeuronGroupDestroy(nzNeuronGroup *ng)
 {
   nzNeuron *np;
 
-  while( zListIsEmpty( ng ) ){
-    zListDeleteHead( ng, &np );
+  while( !zListIsEmpty( &ng->list ) ){
+    zListDeleteHead( &ng->list, &np );
     nzNeuronDestroy( np );
     free( np );
   }
+}
+
+/* find a neuron in a neuron group. */
+nzNeuron *nzNeuronGroupFindNeuron(nzNeuronGroup *ng, int gid, int nid)
+{
+  nzNeuron *np;
+
+  zListForEachRew( &ng->list, np )
+    if( np->data.gid == gid && np->data.nid == nid ) return np;
+  return NULL;
 }
 
 /* set activator functions of units in a neuron group. */
@@ -193,7 +238,7 @@ void nzNeuronGroupSetActivator(nzNeuronGroup *ng, nzActivator *activator)
 {
   nzNeuron *np;
 
-  zListForEach( ng, np )
+  zListForEach( &ng->list, np )
     np->data.activator = activator;
 }
 
@@ -203,13 +248,12 @@ bool nzNeuronGroupSetInput(nzNeuronGroup *ng, zVec input)
   nzNeuron *np;
   register int i = 0;
 
-  zListForEach( ng, np ){
-    if( i >= zVecSize(input) ){
-      ZRUNWARN( NEUZ_WARN_GROUP_MISMATCH_SIZ, zListSize(ng), zVecSize(input) );
-      break;
-    }
-    np->data.input = zVecElemNC(input,i++);
+  if( zListSize(&ng->list) != zVecSize(input) ){
+    ZRUNWARN( NEUZ_WARN_GROUP_MISMATCH_SIZ, zListSize(&ng->list), zVecSize(input) );
+    return false;
   }
+  zListForEach( &ng->list, np )
+    np->data.input = zVecElemNC(input,i++);
   return true;
 }
 
@@ -219,13 +263,12 @@ bool nzNeuronGroupGetOutput(nzNeuronGroup *ng, zVec output)
   nzNeuron *np;
   register int i = 0;
 
-  zListForEach( ng, np ){
-    if( i >= zVecSize(output) ){
-      ZRUNWARN( NEUZ_WARN_GROUP_MISMATCH_SIZ, zListSize(ng), zVecSize(output) );
-      break;
-    }
-    zVecElemNC(output,i++) = np->data.output;
+  if( zListSize(&ng->list) != zVecSize(output) ){
+    ZRUNWARN( NEUZ_WARN_GROUP_MISMATCH_SIZ, zListSize(&ng->list), zVecSize(output) );
+    return false;
   }
+  zListForEach( &ng->list, np )
+    zVecElemNC(output,i++) = np->data.output;
   return true;
 }
 
@@ -234,7 +277,7 @@ void nzNeuronGroupPropagate(nzNeuronGroup *ng)
 {
   nzNeuron *np;
 
-  zListForEach( ng, np )
+  zListForEach( &ng->list, np )
     nzNeuronPropagate( np );
 }
 
@@ -243,7 +286,7 @@ static void _nzNeuronGroupInitGrad(nzNeuronGroup *ng)
 {
   nzNeuron *np;
 
-  zListForEach( ng, np )
+  zListForEach( &ng->list, np )
     _nzNeuronInitGrad( np );
 }
 
@@ -252,7 +295,7 @@ static void _nzNeuronGroupInitParam(nzNeuronGroup *ng)
 {
   nzNeuron *np;
 
-  zListForEach( ng, np )
+  zListForEach( &ng->list, np )
     _nzNeuronInitParam( np );
 }
 
@@ -261,7 +304,7 @@ static bool _nzNeuronGroupBackPropagate(nzNeuronGroup *ng)
 {
   nzNeuron *np;
 
-  zListForEach( ng, np )
+  zListForEach( &ng->list, np )
     _nzNeuronBackPropagate( np );
   return true;
 }
@@ -272,7 +315,7 @@ static bool _nzNeuronGroupTrainSDM(nzNeuronGroup *ng, double rate)
   nzNeuron *np;
   bool ret = true;
 
-  zListForEach( ng, np )
+  zListForEach( &ng->list, np )
     if( !_nzNeuronTrainSDM( np, rate ) ) ret = false;
   return ret;
 }
@@ -282,8 +325,8 @@ void nzNeuronGroupFPrint(FILE *fp, nzNeuronGroup *ng)
 {
   nzNeuron *np;
 
-  fprintf( fp, "(%d neurons)\n", zListSize(ng) );
-  zListForEach( ng, np )
+  fprintf( fp, "(%d neurons)\n", zListSize(&ng->list) );
+  zListForEach( &ng->list, np )
     nzNeuronFPrint( fp, np );
 }
 
@@ -298,7 +341,7 @@ bool nzNetAddGroup(nzNet *net, int num)
     ZALLOCERROR();
     return false;
   }
-  zListInit( &nc->data );
+  nzNeuronGroupInit( &nc->data, zListSize(net) );
   if( !nzNeuronGroupAdd( &nc->data, num ) ){
     nzNeuronGroupDestroy( &nc->data );
     free( nc );
@@ -329,12 +372,37 @@ void nzNetDestroy(nzNet *net)
 }
 
 /* find a neuron group in a neural network. */
-nzNeuronGroup *nzNetFindGroup(nzNet *net, int i)
+nzNeuronGroup *nzNetFindGroup(nzNet *net, int id)
 {
   nzNetCell *nc;
 
-  zListItem( net, i, &nc );
-  return nc ? &nc->data : NULL;
+  zListForEachRew( net, nc )
+    if( nc->data.id == id ) return &nc->data;
+  return NULL;
+}
+
+/* find a neuron in a neural network. */
+nzNeuron *nzNetFindNeuron(nzNet *net, int gid, int nid)
+{
+  nzNeuronGroup *ng;
+
+  if( !( ng = nzNetFindGroup( net, gid ) ) ) return NULL;
+  return nzNeuronGroupFindNeuron( ng, gid, nid );
+}
+
+/* add a neuron to a neural network. */
+bool nzNetAddNeuron(nzNet *net, int gid, int nid, nzActivator *activator, double bias)
+{
+  nzNeuronGroup *ng;
+  nzNeuron *np;
+
+  while( !( ng = nzNetFindGroup( net, gid ) ) )
+    if( !nzNetAddGroup( net, 0 ) ) return false;
+  while( !( np = nzNeuronGroupFindNeuron( ng, gid, nid ) ) )
+    if( !nzNeuronGroupAddOne( ng ) ) return false;
+  np->data.bias = bias;
+  np->data.activator = activator;
+  return true;
 }
 
 /* connect two neuron groups in a neural network. */
@@ -351,12 +419,28 @@ bool nzNetConnectGroup(nzNet *net, int iu, int id)
     ZRUNERROR( NEUZ_ERR_GROUP_NOT_FOUND, id );
     return false;
   }
-  zListForEach( ngd, nd ){
-    zListForEach( ngu, nu ){
-      if( !nzNeuronConnect( nu, nd ) ) return false;
+  zListForEach( &ngd->list, nd ){
+    zListForEach( &ngu->list, nu ){
+      if( !nzNeuronConnect( nu, nd, zRandF( -1, 1 ) ) ) return false;
     }
   }
   return true;
+}
+
+/* connects two neurons in a neural network. */
+bool nzNetConnect(nzNet *net, int ugid, int unid, int dgid, int dnid, double weight)
+{
+  nzNeuron *nu, *nd;
+
+  if( !( nu = nzNetFindNeuron( net, ugid, unid ) ) ){
+    ZRUNERROR( NEUZ_ERR_NEURON_NOT_FOUND, ugid, unid );
+    return false;
+  }
+  if( !( nd = nzNetFindNeuron( net, dgid, dnid ) ) ){
+    ZRUNERROR( NEUZ_ERR_NEURON_NOT_FOUND, dgid, dnid );
+    return false;
+  }
+  return nzNeuronConnect( nu, nd, weight );
 }
 
 /* set input values to the input layer of a neural network. */
@@ -408,12 +492,12 @@ static bool _nzNetInitP(nzNet *net, zVec input, zVec des, double (* lossgrad)(zV
   nzNeuron *np;
   register int i = 0;
 
-  if( zVecSize(des) != zListSize( nzNetOutputLayer(net) ) ) return false;
+  if( zVecSize(des) != zListSize( &nzNetOutputLayer(net)->list ) ) return false;
   if( !( output = zVecAlloc( zVecSizeNC(des) ) ) ) return false;
   nzNetPropagate( net, input );
   nzNetGetOutput( net, output );
   _nzNetInitParam( net );
-  zListForEach( nzNetOutputLayer(net), np )
+  zListForEach( &nzNetOutputLayer(net)->list, np )
     np->data._p = lossgrad( output, des, i++ );
   zVecFree( output );
   return true;
@@ -456,4 +540,106 @@ void nzNetFPrint(FILE *fp, nzNet *net)
     fprintf( fp, "group #%d : ", i++ );
     nzNeuronGroupFPrint( fp, &nc->data );
   }
+}
+
+/* parse ZTK format */
+
+static void *_nzNetNeuronFromZTK(void *obj, int i, void *arg, ZTK *ztk)
+{
+  int gid, nid;
+  nzActivator *activator;
+
+  gid = ZTKInt(ztk);
+  nid = ZTKInt(ztk);
+  activator = nzActivatorQuery( ZTKVal(ztk) );
+  ZTKValNext( ztk );
+  return nzNetAddNeuron( (nzNet*)obj, gid, nid, activator, ZTKDouble(ztk) ) ? obj : NULL;
+}
+
+static void *_nzNetConnectFromZTK(void *obj, int i, void *arg, ZTK *ztk)
+{
+  int ugid, unid, dgid, dnid;
+
+  ugid = ZTKInt(ztk);
+  unid = ZTKInt(ztk);
+  dgid = ZTKInt(ztk);
+  dnid = ZTKInt(ztk);
+  return nzNetConnect( (nzNet*)obj, ugid, unid, dgid, dnid, ZTKDouble(ztk) ) ? obj : NULL;
+}
+
+static ZTKPrp __ztk_prp_key_neuralnetwork[] = {
+  { "neuron", -1, _nzNetNeuronFromZTK, NULL },
+  { "connect", -1, _nzNetConnectFromZTK, NULL },
+};
+
+/* register a definition of tag-and-keys for a neural network to a ZTK format processor. */
+bool nzNetRegZTK(ZTK *ztk, char *tag)
+{
+  return ZTKDefRegPrp( ztk, tag, __ztk_prp_key_neuralnetwork );
+}
+
+/* read a neural network from a ZTK format processor. */
+nzNet *nzNetFromZTK(nzNet *net, ZTK *ztk)
+{
+  nzNetInit( net );
+  if( !ZTKKeyRewind( ztk ) ) return NULL;
+  return ZTKEvalKey( net, NULL, ztk, __ztk_prp_key_neuralnetwork );
+}
+
+static void *_nzNetFromZTK(void *net, int i, void *arg, ZTK *ztk){
+  return nzNetFromZTK( net, ztk );
+}
+
+static ZTKPrp __ztk_prp_tag_neuralnetwork[] = {
+  { "neuralnetwork", -1, _nzNetFromZTK, NULL },
+};
+
+/* read a neural network from a ZTK format file. */
+nzNet *nzNetReadZTK(nzNet *net, char filename[])
+{
+  ZTK ztk;
+
+  ZTKInit( &ztk );
+  if( !nzNetRegZTK( &ztk, NZ_NET_TAG ) ) return NULL;
+  ZTKParse( &ztk, filename );
+  net = ZTKEvalTag( net, NULL, &ztk, __ztk_prp_tag_neuralnetwork );
+  ZTKDestroy( &ztk );
+  return net;
+}
+
+/* print out a neural network to a file. */
+void nzNetFPrintZTK(FILE *fp, nzNet *net)
+{
+  nzNetCell *nc;
+  nzNeuron *np;
+  nzAxon *ap;
+
+  if( !net ) return;
+  fprintf( fp, "[%s]\n", NZ_NET_TAG );
+  zListForEach( net, nc ){
+    zListForEach( &nc->data.list, np ){
+      fprintf( fp, "neuron: %d %d %s %.10g\n", np->data.gid, np->data.nid, np->data.activator ? np->data.activator->typestr : "nil", np->data.bias );
+      for( ap=np->data.axon; ap; ap=ap->next ){
+        fprintf( fp, "connect: %d %d %d %d %.10g\n",
+          ((nzNeuron*)ap->upstream)->data.gid, ((nzNeuron*)ap->upstream)->data.nid,
+          np->data.gid, np->data.nid,
+          ap->weight );
+      }
+    }
+  }
+  fprintf( fp, "\n" );
+}
+
+/* write a neural network to a ZTK format file. */
+bool nzNetWriteZTK(nzNet *net, char filename[])
+{
+  FILE *fp;
+
+  if( !( fp = zOpenZTKFile( filename, "w" ) ) ){
+    ZOPENERROR( filename );
+    return false;
+  }
+  nzNetFPrintZTK( fp, net );
+  fclose( fp );
+  return true;
 }
