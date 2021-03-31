@@ -55,10 +55,17 @@ int main(int argc, char *argv[])
 
   nzNetInit( &nn );
   nzNetAddGroupSetActivator( &nn, N0, NULL );
+#if 0
   nzNetAddGroupSetActivator( &nn, N1, &nz_activator_sigmoid );
   nzNetAddGroupSetActivator( &nn, N2, &nz_activator_sigmoid );
   nzNetAddGroupSetActivator( &nn, N1, &nz_activator_sigmoid );
   nzNetAddGroupSetActivator( &nn, N0, &nz_activator_sigmoid );
+#else
+  nzNetAddGroupSetActivator( &nn, N1, &nz_activator_relu );
+  nzNetAddGroupSetActivator( &nn, N2, &nz_activator_relu );
+  nzNetAddGroupSetActivator( &nn, N1, &nz_activator_relu );
+  nzNetAddGroupSetActivator( &nn, N0, &nz_activator_relu );
+#endif
   nzNetConnectGroup( &nn, 0, 1 );
   nzNetConnectGroup( &nn, 1, 2 );
   nzNetConnectGroup( &nn, 2, 3 );

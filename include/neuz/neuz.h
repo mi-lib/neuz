@@ -174,9 +174,6 @@ __EXPORT void nzNetFPrint(FILE *fp, nzNet *net);
 
 #define NZ_NET_TAG "neuralnetwork"
 
-/*! \brief register a definition of tag-and-keys for a neural network to a ZTK format processor. */
-__EXPORT bool nzNetRegZTK(ZTK *ztk, char *tag);
-
 /*! \brief read a neural network from a ZTK format processor. */
 __EXPORT nzNet *nzNetFromZTK(nzNet *net, ZTK *ztk);
 

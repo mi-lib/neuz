@@ -572,12 +572,6 @@ static ZTKPrp __ztk_prp_key_neuralnetwork[] = {
   { "connect", -1, _nzNetConnectFromZTK, NULL },
 };
 
-/* register a definition of tag-and-keys for a neural network to a ZTK format processor. */
-bool nzNetRegZTK(ZTK *ztk, char *tag)
-{
-  return ZTKDefRegPrp( ztk, tag, __ztk_prp_key_neuralnetwork );
-}
-
 /* read a neural network from a ZTK format processor. */
 nzNet *nzNetFromZTK(nzNet *net, ZTK *ztk)
 {
@@ -600,7 +594,6 @@ nzNet *nzNetReadZTK(nzNet *net, char filename[])
   ZTK ztk;
 
   ZTKInit( &ztk );
-  if( !nzNetRegZTK( &ztk, NZ_NET_TAG ) ) return NULL;
   ZTKParse( &ztk, filename );
   net = ZTKEvalTag( net, NULL, &ztk, __ztk_prp_tag_neuralnetwork );
   ZTKDestroy( &ztk );
