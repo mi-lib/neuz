@@ -1,92 +1,84 @@
 #include <neuz/neuz.h>
 
-#define N0 2
+#define N0 1
 #define N1 5
-#define N2 3
+#define N2 2
 
 #define NT  1000000
 #define NB        1
-#define RATE      0.05
+#define RATE      0.1
 
-double loss(zVec output, zVec des)
+double loss(zVec output, zVec outref)
 {
-  return 0.5 * zVecSqrDist( output, des );
+  return 0.5 * zVecSqrDist( output, outref );
 }
 
-double lossgrad(zVec output, zVec des, int i)
+double lossgrad(zVec output, zVec outref, int i)
 {
-  return zVecElem(output,i) - zVecElem(des,i);
+  return zVecElem(output,i) - zVecElem(outref,i);
 }
 
-double train(nzNet *net, zVec input, zVec output, double theta)
+zVec train_ref(zVec input, zVec outref, double theta)
 {
   double s, c;
 
   zSinCos( theta, &s, &c );
-  zVecSetElemList( input, 0.5*(s+1), 0.5*(c+1) );
-  nzNetPropagate( net, input );
-  nzNetBackPropagate( net, input, input, lossgrad );
-  nzNetGetOutput( net, output );
-  return loss( output, input );
+  zVecSetElem( input, 0, theta );
+  return zVecSetElemList( outref, 0.25*(s+1), 0.25*(c+1) );
 }
 
-void test(nzNet *net, zVec input, zVec output, double theta)
+double train(nzNet *net, zVec input, zVec output, zVec outref, double theta)
 {
-  double s, c;
+  train_ref( input, outref, theta );
+  nzNetPropagate( net, input );
+  nzNetBackPropagate( net, input, outref, lossgrad );
+  nzNetGetOutput( net, output );
+  return loss( output, outref );
+}
 
-  zSinCos( theta, &s, &c );
-  zVecSetElemList( input, 0.5*(s+1), 0.5*(c+1) );
+void test(nzNet *net, zVec input, zVec output, zVec outref, double theta)
+{
+  train_ref( input, outref, theta );
   nzNetPropagate( net, input );
   nzNetGetOutput( net, output );
-  printf( "%g %g %g %g %g\n", theta, s, c, 2*zVecElemNC(output,0)-1, 2*zVecElemNC(output,1)-1 );
+  printf( "%g %g %g %g %g\n", theta, zVecElemNC(outref,0), zVecElemNC(outref,1), zVecElemNC(output,0), zVecElemNC(output,1) );
 }
 
 int main(int argc, char *argv[])
 {
   nzNet nn;
-  zVec input, output;
+  zVec input, output, outref;
   double l;
   int i, j;
 
   zRandInit();
 
   input  = zVecAlloc( N0 );
-  output = zVecAlloc( N0 );
+  output = zVecAlloc( N2 );
+  outref = zVecAlloc( N2 );
 
   nzNetInit( &nn );
   nzNetAddGroupSetActivator( &nn, N0, NULL );
-#if 0
   nzNetAddGroupSetActivator( &nn, N1, &nz_activator_sigmoid );
   nzNetAddGroupSetActivator( &nn, N2, &nz_activator_sigmoid );
-  nzNetAddGroupSetActivator( &nn, N1, &nz_activator_sigmoid );
-  nzNetAddGroupSetActivator( &nn, N0, &nz_activator_sigmoid );
-#else
-  nzNetAddGroupSetActivator( &nn, N1, &nz_activator_relu );
-  nzNetAddGroupSetActivator( &nn, N2, &nz_activator_relu );
-  nzNetAddGroupSetActivator( &nn, N1, &nz_activator_relu );
-  nzNetAddGroupSetActivator( &nn, N0, &nz_activator_relu );
-#endif
   nzNetConnectGroup( &nn, 0, 1 );
   nzNetConnectGroup( &nn, 1, 2 );
-  nzNetConnectGroup( &nn, 2, 3 );
-  nzNetConnectGroup( &nn, 3, 4 );
 
   /* training */
   for( i=0; i<NT; i++ ){
     nzNetInitGrad( &nn );
     for( l=0, j=0; j<NB; j++ )
-      l += train( &nn, input, output, zRandF(-zPI,zPI) );
+      l += train( &nn, input, output, outref, zRandF(-zPI,zPI) );
     eprintf( "%03d %.10g\n", i, l );
     if( zIsTiny( l ) ) break;
     nzNetTrainSDM( &nn, RATE );
   }
-
+  /* check */
   for( l=0, j=0; j<100; j++ )
-    test( &nn, input, output, zRandF(-zPI,zPI) );
+    test( &nn, input, output, outref, zRandF(-zPI,zPI) );
 
   nzNetWriteZTK( &nn, "sin.ztk" );
-
   nzNetDestroy( &nn );
-  zVecFreeAO( 2, input, output );
+  zVecFreeAO( 3, input, output, outref );
   return 0;
 }
