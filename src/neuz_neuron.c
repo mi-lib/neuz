@@ -1,70 +1,10 @@
 /* neuZ - Neural Network Library
  * (C)Copyright, Zhidao, since 2020, all rights are reserved.
+ *
+ * neuron unit and group.
  */
 
-#include <neuz/neuz.h>
-
-#define NEUZ_ERR_UNKNOWN_ACTIVATOR "unknown activator type: %s"
-#define NEUZ_ERR_GROUP_NOT_FOUND "neuron group %d not found"
-#define NEUZ_ERR_NEURON_NOT_FOUND "neuron %d:%d not found"
-#define NEUZ_WARN_GROUP_MISMATCH_SIZ "size mismatch between a neuron group (%d) and a vector (%d)"
-#define NEUZ_WARN_NET_TOOFEWLAYER "cannot apply backpropagation to a two-or-less-layered network."
-
-/* activator functions */
-
-/* step function */
-nzActivator nz_activator_step = {
-  "step",
-  nzActivatorStep,
-  nzActivatorStepDif
-};
-
-double nzActivatorStep(double val){ return val >= 0 ? 1 : 0; }
-double nzActivatorStepDif(double val){ return 0; /* case val=0 is ignored. */ }
-
-/* sigmoid function */
-nzActivator nz_activator_sigmoid = {
-  "sigmoid",
-  nzActivatorSigmoid,
-  nzActivatorSigmoidDif
-};
-
-double nzActivatorSigmoid(double val){ return zSigmoid( 4*val ); }
-double nzActivatorSigmoidDif(double val){
-  double u;
-  u = exp( -4*val );
-  return 4 * u / zSqr( 1 + u );
-}
-
-/* rectified linear unit function */
-nzActivator nz_activator_relu = {
-  "relu",
-  nzActivatorReLU,
-  nzActivatorReLUDif
-};
-
-double nzActivatorReLU(double val){ return zMax( val, 0 ); }
-double nzActivatorReLUDif(double val){ return val >= 0 ? 1 : 0; /* case val=0 is ignored. */ }
-
-/* add the handle to the following list when you create a new activator function. */
-#define NZ_ACTIVATOR_ARRAY \
-  nzActivator *_nz_activator[] = {\
-    &nz_activator_step,\
-    &nz_activator_sigmoid,\
-    &nz_activator_relu,\
-    NULL,\
-  }
-
-/* query an activator function by a string. */
-nzActivator *nzActivatorQuery(char *str)
-{
-  NZ_ACTIVATOR_ARRAY;
-  nzActivator **activator;
-
-  for( activator=_nz_activator; *activator; activator++ )
-    if( strcmp( (*activator)->typestr, str ) == 0 ) return *activator;
-  return NULL;
-}
+#include <neuz/neuz_neuron.h>
 
 /* unit neuron class */
 

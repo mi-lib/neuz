@@ -5,8 +5,8 @@
 #define N2 2
 
 #define NT  1000000
-#define NB        1
-#define RATE      0.1
+#define NB       10
+#define RATE      0.05
 
 double loss(zVec output, zVec outref)
 {
@@ -59,8 +59,16 @@ int main(int argc, char *argv[])
 
   nzNetInit( &nn );
   nzNetAddGroupSetActivator( &nn, N0, NULL );
+#if 1
   nzNetAddGroupSetActivator( &nn, N1, &nz_activator_sigmoid );
   nzNetAddGroupSetActivator( &nn, N2, &nz_activator_sigmoid );
+#elif 0
+  nzNetAddGroupSetActivator( &nn, N1, &nz_activator_relu );
+  nzNetAddGroupSetActivator( &nn, N2, &nz_activator_relu );
+#else
+  nzNetAddGroupSetActivator( &nn, N1, &nz_activator_blunt_relu );
+  nzNetAddGroupSetActivator( &nn, N2, &nz_activator_blunt_relu );
+#endif
   nzNetConnectGroup( &nn, 0, 1 );
   nzNetConnectGroup( &nn, 1, 2 );
 

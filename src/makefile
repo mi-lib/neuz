@@ -10,7 +10,8 @@ LD=gcc
 LDFLAGS=-shared
 SIGNUP=echo "neuZ ver."$(VERSION)" Copyright (C) 2000 Tomomichi Sugihara (Zhidao)" >>
 
-OBJ=neuz.o
+OBJ=neuz_activator.o \
+	neuz_neuron.o
 DLIB=libneuz.so
 
 TARGET=$(DLIB)
