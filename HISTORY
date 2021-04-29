@@ -1,3 +1,4 @@
+2021. 4.29. Reflected new specification of zeda-config-gen. [app]
 2021. 4.23. Added nz_activator_blunt_relu. [neuz_activator]
 2021. 4.23. Renamed nzActivator* and nzActivator*Dif to _nzActivator* and _nzActivator*Dif. [neuz_activator]
 2021. 4.23. Reorganized modules. [neuz_errmsg, neuz_activator, neuz_neuron]
