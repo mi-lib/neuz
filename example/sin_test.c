@@ -65,9 +65,12 @@ int main(int argc, char *argv[])
 #elif 0
   nzNetAddGroupSetActivator( &nn, N1, &nz_activator_relu );
   nzNetAddGroupSetActivator( &nn, N2, &nz_activator_relu );
-#else
+#elif 0
   nzNetAddGroupSetActivator( &nn, N1, &nz_activator_blunt_relu );
   nzNetAddGroupSetActivator( &nn, N2, &nz_activator_blunt_relu );
+#else
+  nzNetAddGroupSetActivator( &nn, N1, &nz_activator_softplus );
+  nzNetAddGroupSetActivator( &nn, N2, &nz_activator_softplus );
 #endif
   nzNetConnectGroup( &nn, 0, 1 );
   nzNetConnectGroup( &nn, 1, 2 );

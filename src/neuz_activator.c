@@ -50,6 +50,16 @@ nzActivator nz_activator_blunt_relu = {
   _nzActivatorBluntReLUDif
 };
 
+/* softplus */
+static double _nzActivatorSoftplus(double val){ return log( 1 + exp(val) ); }
+static double _nzActivatorSoftplusDif(double val){ return 1.0 / ( 1 + exp(-val) ); }
+
+nzActivator nz_activator_softplus = {
+  "softplus",
+  _nzActivatorSoftplus,
+  _nzActivatorSoftplusDif
+};
+
 /* add the handle to the following list when you create a new activator function. */
 #define NZ_ACTIVATOR_ARRAY \
   nzActivator *_nz_activator[] = {\
@@ -57,6 +67,7 @@ nzActivator nz_activator_blunt_relu = {
     &nz_activator_sigmoid,\
     &nz_activator_relu,\
     &nz_activator_blunt_relu,\
+    &nz_activator_softplus,\
     NULL,\
   }
 
