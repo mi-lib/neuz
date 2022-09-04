@@ -186,7 +186,7 @@ void nzNeuronGroupSetActivator(nzNeuronGroup *ng, nzActivator *activator)
 bool nzNeuronGroupSetInput(nzNeuronGroup *ng, zVec input)
 {
   nzNeuron *np;
-  register int i = 0;
+  int i = 0;
 
   if( zListSize(&ng->list) != zVecSize(input) ){
     ZRUNWARN( NEUZ_WARN_GROUP_MISMATCH_SIZ, zListSize(&ng->list), zVecSize(input) );
@@ -201,7 +201,7 @@ bool nzNeuronGroupSetInput(nzNeuronGroup *ng, zVec input)
 bool nzNeuronGroupGetOutput(nzNeuronGroup *ng, zVec output)
 {
   nzNeuron *np;
-  register int i = 0;
+  int i = 0;
 
   if( zListSize(&ng->list) != zVecSize(output) ){
     ZRUNWARN( NEUZ_WARN_GROUP_MISMATCH_SIZ, zListSize(&ng->list), zVecSize(output) );
@@ -430,7 +430,7 @@ static bool _nzNetInitP(nzNet *net, zVec input, zVec des, double (* lossgrad)(zV
 {
   zVec output;
   nzNeuron *np;
-  register int i = 0;
+  int i = 0;
 
   if( zVecSize(des) != zListSize( &nzNetOutputLayer(net)->list ) ) return false;
   if( !( output = zVecAlloc( zVecSizeNC(des) ) ) ) return false;

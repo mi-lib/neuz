@@ -1,3 +1,4 @@
+2022. 9. 4. Removed register keywords. [neuz_neuron]
 2021. 6.12. Added .gitkeep in lib/. [lib]
 2021. 6.11. Added nz_activator_softplus. [neuz_activator]
 2021. 6. 1. Applied new zeda-makefile-gen to compilation of shared objects. [src]
