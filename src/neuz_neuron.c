@@ -517,11 +517,11 @@ nzNet *nzNetFromZTK(nzNet *net, ZTK *ztk)
 {
   nzNetInit( net );
   if( !ZTKKeyRewind( ztk ) ) return NULL;
-  return ZTKEvalKey( net, NULL, ztk, __ztk_prp_key_neuralnetwork );
+  return (nzNet *)ZTKEvalKey( net, NULL, ztk, __ztk_prp_key_neuralnetwork );
 }
 
 static void *_nzNetFromZTK(void *net, int i, void *arg, ZTK *ztk){
-  return nzNetFromZTK( net, ztk );
+  return nzNetFromZTK( (nzNet *)net, ztk );
 }
 
 static ZTKPrp __ztk_prp_tag_neuralnetwork[] = {
@@ -535,7 +535,7 @@ nzNet *nzNetReadZTK(nzNet *net, char filename[])
 
   ZTKInit( &ztk );
   ZTKParse( &ztk, filename );
-  net = ZTKEvalTag( net, NULL, &ztk, __ztk_prp_tag_neuralnetwork );
+  net = (nzNet *)ZTKEvalTag( net, NULL, &ztk, __ztk_prp_tag_neuralnetwork );
   ZTKDestroy( &ztk );
   return net;
 }

@@ -1,3 +1,5 @@
+2022. 9. 5. Added explicit castings from void pointers. [neuz_activator, neuz_neuron]
+2022. 9. 5. Added declarations for C++. [neuz_errmsg]
 2022. 9. 4. Removed register keywords. [neuz_neuron]
 2021. 6.12. Added .gitkeep in lib/. [lib]
 2021. 6.11. Added nz_activator_softplus. [neuz_activator]

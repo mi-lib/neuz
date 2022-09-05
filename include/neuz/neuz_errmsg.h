@@ -11,6 +11,8 @@
 
 /* NOTE: never include this header file in user programs. */
 
+__BEGIN_DECLS
+
 /* error messages */
 
 #define NEUZ_ERR_UNKNOWN_ACTIVATOR "unknown activator type: %s"

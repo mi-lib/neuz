@@ -16,7 +16,7 @@ __BEGIN_DECLS
 
 /*! \brief activator function class */
 typedef struct{
-  char *typestr;         /* a string to represent type */
+  const char *typestr;   /* a string to represent type */
   double (* f)(double);  /* function */
   double (* df)(double); /* derivative function */
 } nzActivator;
