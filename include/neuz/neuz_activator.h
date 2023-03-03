@@ -22,19 +22,19 @@ typedef struct{
 } nzActivator;
 
 /*! \brief step function */
-extern nzActivator nz_activator_step;
+__EXPORT nzActivator nz_activator_step;
 
 /*! \brief sigmoid function */
-extern nzActivator nz_activator_sigmoid;
+__EXPORT nzActivator nz_activator_sigmoid;
 
 /*! \brief rectified linear unit function */
-extern nzActivator nz_activator_relu;
+__EXPORT nzActivator nz_activator_relu;
 
 /*! \brief blunt ReLU */
-extern nzActivator nz_activator_blunt_relu;
+__EXPORT nzActivator nz_activator_blunt_relu;
 
 /*! \brief softplus */
-extern nzActivator nz_activator_softplus;
+__EXPORT nzActivator nz_activator_softplus;
 
 /*! \brief assign an activator function queried by a string. */
 __EXPORT nzActivator *nzActivatorQuery(char *str);
