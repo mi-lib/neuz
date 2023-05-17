@@ -9,8 +9,7 @@
 #ifndef __NEUZ_ACTIVATOR_H__
 #define __NEUZ_ACTIVATOR_H__
 
-#include <zm/zm.h>
-#include <neuz/neuz_errmsg.h>
+#include <neuz/neuz_misc.h>
 
 __BEGIN_DECLS
 
@@ -22,22 +21,22 @@ typedef struct{
 } nzActivator;
 
 /*! \brief step function */
-__EXPORT nzActivator nz_activator_step;
+__NEUZ_EXPORT nzActivator nz_activator_step;
 
 /*! \brief sigmoid function */
-__EXPORT nzActivator nz_activator_sigmoid;
+__NEUZ_EXPORT nzActivator nz_activator_sigmoid;
 
 /*! \brief rectified linear unit function */
-__EXPORT nzActivator nz_activator_relu;
+__NEUZ_EXPORT nzActivator nz_activator_relu;
 
 /*! \brief blunt ReLU */
-__EXPORT nzActivator nz_activator_blunt_relu;
+__NEUZ_EXPORT nzActivator nz_activator_blunt_relu;
 
 /*! \brief softplus */
-__EXPORT nzActivator nz_activator_softplus;
+__NEUZ_EXPORT nzActivator nz_activator_softplus;
 
 /*! \brief assign an activator function queried by a string. */
-__EXPORT nzActivator *nzActivatorQuery(char *str);
+__NEUZ_EXPORT nzActivator *nzActivatorQuery(char *str);
 
 __END_DECLS
 

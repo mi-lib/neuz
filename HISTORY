@@ -1,3 +1,5 @@
+2023. 5.16. Replaced __EXPORT to __NEUZ_EXPORT. [all]
+2023. 5.16. Added neuz_misc.h. [neuz_misc, neuz_activator]
 2023. 3.29. Modified config.lib and config.tools for C++ compilation. [src, tools]
 2023. 3. 3. Modified nz_activator_step, nz_activator_sigmoid, nz_activator_relu, nz_activator_blunt_relu, and nz_activator_softplus with the new definition of __EXPORT. [neuz_activator]
 2022. 9. 5. Added explicit castings from void pointers. [neuz_activator, neuz_neuron]
