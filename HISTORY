@@ -1,3 +1,4 @@
+2023. 5.20. Reflected new specification of zeda-makefile-gen, and modified src/makefile. [src]
 2023. 5.16. Replaced __EXPORT to __NEUZ_EXPORT. [all]
 2023. 5.16. Added neuz_misc.h. [neuz_misc, neuz_activator]
 2023. 3.29. Modified config.lib and config.tools for C++ compilation. [src, tools]
