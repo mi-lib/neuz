@@ -1,5 +1,3 @@
-include ../config
-
 INCLUDE = `zx11-config -I` `neuz-config -I`
 LIB = `zx11-config -L` `neuz-config -L`
 LINK = -lcairo `zx11-config -l` `neuz-config -l`
