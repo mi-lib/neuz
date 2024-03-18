@@ -491,7 +491,7 @@ static void *_nzNetNeuronFromZTK(void *obj, int i, void *arg, ZTK *ztk)
 
   gid = ZTKInt(ztk);
   nid = ZTKInt(ztk);
-  activator = nzActivatorQuery( ZTKVal(ztk) );
+  activator = nzActivatorAssignByStr( ZTKVal(ztk) );
   ZTKValNext( ztk );
   return nzNetAddNeuron( (nzNet*)obj, gid, nid, activator, ZTKDouble(ztk) ) ? obj : NULL;
 }
@@ -529,12 +529,12 @@ static ZTKPrp __ztk_prp_tag_neuralnetwork[] = {
 };
 
 /* read a neural network from a ZTK format file. */
-nzNet *nzNetReadZTK(nzNet *net, char filename[])
+nzNet *nzNetReadZTK(nzNet *net, const char filename[])
 {
   ZTK ztk;
 
   ZTKInit( &ztk );
-  ZTKParse( &ztk, filename );
+  ZTKParse( &ztk, (char *)filename );
   net = (nzNet *)ZTKEvalTag( net, NULL, &ztk, __ztk_prp_tag_neuralnetwork );
   ZTKDestroy( &ztk );
   return net;
@@ -564,11 +564,11 @@ void nzNetFPrintZTK(FILE *fp, nzNet *net)
 }
 
 /* write a neural network to a ZTK format file. */
-bool nzNetWriteZTK(nzNet *net, char filename[])
+bool nzNetWriteZTK(nzNet *net, const char filename[])
 {
   FILE *fp;
 
-  if( !( fp = zOpenZTKFile( filename, "w" ) ) ){
+  if( !( fp = zOpenZTKFile( (char *)filename, "w" ) ) ){
     ZOPENERROR( filename );
     return false;
   }

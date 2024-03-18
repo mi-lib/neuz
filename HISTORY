@@ -1,3 +1,8 @@
+2024. 3.19. Added C++ methods to nzNeuron, nzNeuronGroup, and nzNet. [neuz_neuron]
+2024. 3.19. Redefined nzNetCell and nzNet for C++ compatibility. [neuz_neuron]
+2024. 3.19. Modified specifications of nzNetReadZTK and nzNetWriteZTK to accept a constant pointer to a string. [neuz_neuron]
+2024. 3.18. Redefined nzNeuron and nzNeuronList for C++ compatibility. [neuz_neuron]
+2024. 3. 6. Renamed nzActivatorQuery to nzActivatorAssignByStr. [neuz_activator, neuz_neuron]
 2023. 6.21. Separated config and libinfo. [all]
 2023. 6. 1. Reflected modification of zeda-makefile-gen to keep neuz_export.h. [neuz_export]
 2023. 5.20. Reflected new specification of zeda-makefile-gen, and modified src/makefile. [src]

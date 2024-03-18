@@ -71,8 +71,8 @@ nzActivator nz_activator_softplus = {
     NULL,\
   }
 
-/* query an activator function by a string. */
-nzActivator *nzActivatorQuery(char *str)
+/* assign an activator function by a string. */
+nzActivator *nzActivatorAssignByStr(char *str)
 {
   NZ_ACTIVATOR_ARRAY;
   nzActivator **activator;

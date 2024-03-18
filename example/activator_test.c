@@ -9,10 +9,12 @@ int main(int argc, char *argv[])
 
   for( i=-N; i<=N; i++ ){
     val = 2*(double)i/N;
-    printf( "%.10g %.10g %.10g %.10g %.10g %.10g %.10g\n", val,
+    printf( "%.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g %.10g\n", val,
       nz_activator_step.f( val ), nz_activator_step.df( val ),
       nz_activator_sigmoid.f( val ), nz_activator_sigmoid.df( val ),
-      nz_activator_relu.f( val ), nz_activator_relu.df( val ) );
+      nz_activator_relu.f( val ), nz_activator_relu.df( val ),
+      nz_activator_blunt_relu.f( val ), nz_activator_blunt_relu.df( val ),
+      nz_activator_softplus.f( val ), nz_activator_softplus.df( val ) );
   }
   return 0;
 }

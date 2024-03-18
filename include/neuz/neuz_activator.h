@@ -14,11 +14,11 @@
 __BEGIN_DECLS
 
 /*! \brief activator function class */
-typedef struct{
+ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzActivator ){
   const char *typestr;   /* a string to represent type */
   double (* f)(double);  /* function */
   double (* df)(double); /* derivative function */
-} nzActivator;
+};
 
 /*! \brief step function */
 __NEUZ_EXPORT nzActivator nz_activator_step;
@@ -35,8 +35,8 @@ __NEUZ_EXPORT nzActivator nz_activator_blunt_relu;
 /*! \brief softplus */
 __NEUZ_EXPORT nzActivator nz_activator_softplus;
 
-/*! \brief assign an activator function queried by a string. */
-__NEUZ_EXPORT nzActivator *nzActivatorQuery(char *str);
+/*! \brief assign an activator function by a string. */
+__NEUZ_EXPORT nzActivator *nzActivatorAssignByStr(char *str);
 
 __END_DECLS
 
