@@ -1,3 +1,4 @@
+2024. 3.19. Modified specification of nzActivatorAssignByStr to accept a constant pointer to a string. [neuz_activator]
 2024. 3.19. Added C++ methods to nzNeuron, nzNeuronGroup, and nzNet. [neuz_neuron]
 2024. 3.19. Redefined nzNetCell and nzNet for C++ compatibility. [neuz_neuron]
 2024. 3.19. Modified specifications of nzNetReadZTK and nzNetWriteZTK to accept a constant pointer to a string. [neuz_neuron]

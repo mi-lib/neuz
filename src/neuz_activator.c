@@ -72,7 +72,7 @@ nzActivator nz_activator_softplus = {
   }
 
 /* assign an activator function by a string. */
-nzActivator *nzActivatorAssignByStr(char *str)
+nzActivator *nzActivatorAssignByStr(const char *str)
 {
   NZ_ACTIVATOR_ARRAY;
   nzActivator **activator;

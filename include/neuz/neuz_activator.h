@@ -36,7 +36,7 @@ __NEUZ_EXPORT nzActivator nz_activator_blunt_relu;
 __NEUZ_EXPORT nzActivator nz_activator_softplus;
 
 /*! \brief assign an activator function by a string. */
-__NEUZ_EXPORT nzActivator *nzActivatorAssignByStr(char *str);
+__NEUZ_EXPORT nzActivator *nzActivatorAssignByStr(const char *str);
 
 __END_DECLS
 

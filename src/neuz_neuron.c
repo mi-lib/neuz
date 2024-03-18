@@ -534,7 +534,7 @@ nzNet *nzNetReadZTK(nzNet *net, const char filename[])
   ZTK ztk;
 
   ZTKInit( &ztk );
-  ZTKParse( &ztk, (char *)filename );
+  ZTKParse( &ztk, filename );
   net = (nzNet *)ZTKEvalTag( net, NULL, &ztk, __ztk_prp_tag_neuralnetwork );
   ZTKDestroy( &ztk );
   return net;
@@ -568,7 +568,7 @@ bool nzNetWriteZTK(nzNet *net, const char filename[])
 {
   FILE *fp;
 
-  if( !( fp = zOpenZTKFile( (char *)filename, "w" ) ) ){
+  if( !( fp = zOpenZTKFile( filename, "w" ) ) ){
     ZOPENERROR( filename );
     return false;
   }
