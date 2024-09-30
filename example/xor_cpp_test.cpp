@@ -81,6 +81,6 @@ int main(int argc, char *argv[])
   nn.writeZTK( XOR_ZTK );
 
   nn.destroy();
-  zVecFreeAO( 3, input, output, des );
+  zVecFreeAtOnce( 3, input, output, des );
   return 0;
 }

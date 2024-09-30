@@ -87,6 +87,6 @@ int main(int argc, char *argv[])
 
   nzNetWriteZTK( &nn, SIN_AE_ZTK );
   nzNetDestroy( &nn );
-  zVecFreeAO( 2, input, output );
+  zVecFreeAtOnce( 2, input, output );
   return 0;
 }
