@@ -1,69 +1,69 @@
-[neuralnetwork]
+[neuz::neuralnetwork]
 neuron: 0 0 nil -0.5801304578
 neuron: 0 1 nil -0.1899297259
-neuron: 1 0 sigmoid 0.862697799
-connect: 0 1 1 0 0.9804034565
-connect: 0 0 1 0 -0.04071800647
-neuron: 1 1 sigmoid 0.4909973098
-connect: 0 1 1 1 -0.4527530823
-connect: 0 0 1 1 -2.259500634
-neuron: 1 2 sigmoid -0.5232265925
-connect: 0 1 1 2 -0.6756967189
-connect: 0 0 1 2 0.1948557666
-neuron: 1 3 sigmoid 0.5060918326
-connect: 0 1 1 3 -2.332865772
-connect: 0 0 1 3 0.4752416549
-neuron: 1 4 sigmoid -0.7810585747
-connect: 0 1 1 4 -0.3833713594
-connect: 0 0 1 4 0.4280280736
-neuron: 2 0 sigmoid 0.2572128138
-connect: 1 4 2 0 0.3545743386
-connect: 1 3 2 0 0.4412683074
-connect: 1 2 2 0 0.018546406
-connect: 1 1 2 0 0.1774391575
-connect: 1 0 2 0 -1.216544357
-neuron: 2 1 sigmoid 1.501791265
-connect: 1 4 2 1 0.4740431666
-connect: 1 3 2 1 -1.585645675
-connect: 1 2 2 1 0.378502427
-connect: 1 1 2 1 -1.423840727
-connect: 1 0 2 1 0.0637034583
-neuron: 2 2 sigmoid 0.09687420821
-connect: 1 4 2 2 -0.3902642001
-connect: 1 3 2 2 1.312240114
-connect: 1 2 2 2 0.3153837502
-connect: 1 1 2 2 -1.6265812
-connect: 1 0 2 2 -0.1027255112
-neuron: 3 0 sigmoid -0.659828482
-connect: 2 2 3 0 0.8898672035
-connect: 2 1 3 0 -0.4010078033
-connect: 2 0 3 0 -0.2869220579
-neuron: 3 1 sigmoid -1.108642543
-connect: 2 2 3 1 0.1033798907
-connect: 2 1 3 1 -0.8769677395
-connect: 2 0 3 1 0.2615896264
-neuron: 3 2 sigmoid 0.2043827628
-connect: 2 2 3 2 -0.9354225092
-connect: 2 1 3 2 1.576434052
-connect: 2 0 3 2 -0.300433392
-neuron: 3 3 sigmoid -1.260409485
-connect: 2 2 3 3 0.6641415474
-connect: 2 1 3 3 1.409019987
-connect: 2 0 3 3 -0.467937283
-neuron: 3 4 sigmoid -1.047518905
-connect: 2 2 3 4 -0.7141793972
-connect: 2 1 3 4 -0.7150099664
-connect: 2 0 3 4 -0.230182994
-neuron: 4 0 sigmoid -0.3717131965
-connect: 3 4 4 0 0.2828466622
-connect: 3 3 4 0 1.204079873
-connect: 3 2 4 0 -0.8338309221
-connect: 3 1 4 0 0.2534496041
-connect: 3 0 4 0 0.1697028286
-neuron: 4 1 sigmoid -0.7243942391
-connect: 3 4 4 1 0.2123064195
-connect: 3 3 4 1 0.2860106434
-connect: 3 2 4 1 0.5366261827
-connect: 3 1 4 1 0.3454813638
-connect: 3 0 4 1 -0.9776347004
+neuron: 1 0 sigmoid 0.8391458058
+connect: 0 0 1 0 0.00294876059
+connect: 0 1 1 0 0.9786507432
+neuron: 1 1 sigmoid 0.6083959843
+connect: 0 0 1 1 -2.571292897
+connect: 0 1 1 1 -0.3689342418
+neuron: 1 2 sigmoid -0.4402738556
+connect: 0 0 1 2 0.2006440859
+connect: 0 1 1 2 -0.7324663127
+neuron: 1 3 sigmoid 0.3446715383
+connect: 0 0 1 3 0.8503312372
+connect: 0 1 1 3 -2.374424293
+neuron: 1 4 sigmoid -0.8239526875
+connect: 0 0 1 4 0.384618714
+connect: 0 1 1 4 -0.4131859395
+neuron: 2 0 sigmoid 0.1931521897
+connect: 1 0 2 0 -1.282092143
+connect: 1 1 2 0 0.8069935312
+connect: 1 2 2 0 -0.002617095367
+connect: 1 3 2 0 0.3780307876
+connect: 1 4 2 0 0.3255524536
+neuron: 2 1 sigmoid 1.591634345
+connect: 1 0 2 1 0.1387434535
+connect: 1 1 2 1 -1.488980513
+connect: 1 2 2 1 0.426034057
+connect: 1 3 2 1 -1.69503907
+connect: 1 4 2 1 0.4823058078
+neuron: 2 2 sigmoid 0.09711606678
+connect: 1 0 2 2 -0.1188139201
+connect: 1 1 2 2 -1.431183898
+connect: 1 2 2 2 0.3544014695
+connect: 1 3 2 2 1.246761342
+connect: 1 4 2 2 -0.3784341199
+neuron: 3 0 sigmoid -0.2922394495
+connect: 2 0 3 0 -0.3363802617
+connect: 2 1 3 0 -0.7368302824
+connect: 2 2 3 0 0.6679811302
+neuron: 3 1 sigmoid -1.084738807
+connect: 2 0 3 1 0.273696
+connect: 2 1 3 1 -0.8901648034
+connect: 2 2 3 1 0.03394270866
+neuron: 3 2 sigmoid -0.03241169362
+connect: 2 0 3 2 -0.5706335212
+connect: 2 1 3 2 2.079114862
+connect: 2 2 3 2 -0.8775762411
+neuron: 3 3 sigmoid -1.315991491
+connect: 2 0 3 3 -0.3471562641
+connect: 2 1 3 3 1.573910203
+connect: 2 2 3 3 0.6228397955
+neuron: 3 4 sigmoid -1.032085906
+connect: 2 0 3 4 -0.2216935209
+connect: 2 1 3 4 -0.7225343057
+connect: 2 2 3 4 -0.7071857161
+neuron: 4 0 sigmoid -0.5645691094
+connect: 3 0 4 0 0.4087250253
+connect: 3 1 4 0 0.2391692227
+connect: 3 2 4 0 -0.8460917516
+connect: 3 3 4 0 1.391487486
+connect: 3 4 4 0 0.278232719
+neuron: 4 1 sigmoid -0.2536315931
+connect: 3 0 4 1 -1.763369404
+connect: 3 1 4 1 0.3723268869
+connect: 3 2 4 1 0.04572260339
+connect: 3 3 4 1 0.3127949197
+connect: 3 4 4 1 0.2354398117
 

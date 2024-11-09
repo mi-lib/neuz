@@ -238,7 +238,10 @@ __NEUZ_EXPORT void nzNetFPrint(FILE *fp, nzNet *net);
 
 /* parse ZTK format */
 
-#define NZ_NET_TAG "neuralnetwork"
+#define ZTK_TAG_NEUZ_NETWORK "neuz::neuralnetwork"
+
+#define ZTK_KEY_NEUZ_NEURON  "neuron"
+#define ZTK_KEY_NEUZ_CONNECT "connect"
 
 /*! \brief read a neural network from a ZTK format processor. */
 __NEUZ_EXPORT nzNet *nzNetFromZTK(nzNet *net, ZTK *ztk);

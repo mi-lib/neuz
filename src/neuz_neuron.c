@@ -508,8 +508,8 @@ static void *_nzNetConnectFromZTK(void *obj, int i, void *arg, ZTK *ztk)
 }
 
 static ZTKPrp __ztk_prp_key_neuralnetwork[] = {
-  { "neuron", -1, _nzNetNeuronFromZTK, NULL },
-  { "connect", -1, _nzNetConnectFromZTK, NULL },
+  { ZTK_KEY_NEUZ_NEURON,  -1, _nzNetNeuronFromZTK, NULL },
+  { ZTK_KEY_NEUZ_CONNECT, -1, _nzNetConnectFromZTK, NULL },
 };
 
 /* read a neural network from a ZTK format processor. */
@@ -525,7 +525,7 @@ static void *_nzNetFromZTK(void *net, int i, void *arg, ZTK *ztk){
 }
 
 static ZTKPrp __ztk_prp_tag_neuralnetwork[] = {
-  { "neuralnetwork", -1, _nzNetFromZTK, NULL },
+  { ZTK_TAG_NEUZ_NETWORK, -1, _nzNetFromZTK, NULL },
 };
 
 /* read a neural network from a ZTK format file. */
@@ -548,7 +548,7 @@ void nzNetFPrintZTK(FILE *fp, nzNet *net)
   nzAxon *ap;
 
   if( !net ) return;
-  fprintf( fp, "[%s]\n", NZ_NET_TAG );
+  fprintf( fp, "[%s]\n", ZTK_TAG_NEUZ_NETWORK );
   zListForEach( net, nc ){
     zListForEach( &nc->data.list, np ){
       fprintf( fp, "neuron: %d %d %s %.10g\n", np->data.gid, np->data.nid, np->data.activator ? np->data.activator->typestr : "nil", np->data.bias );
