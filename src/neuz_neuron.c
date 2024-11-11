@@ -507,7 +507,7 @@ static void *_nzNetConnectFromZTK(void *obj, int i, void *arg, ZTK *ztk)
   return nzNetConnect( (nzNet*)obj, ugid, unid, dgid, dnid, ZTKDouble(ztk) ) ? obj : NULL;
 }
 
-static ZTKPrp __ztk_prp_key_neuralnetwork[] = {
+static const ZTKPrp __ztk_prp_key_neuralnetwork[] = {
   { ZTK_KEY_NEUZ_NEURON,  -1, _nzNetNeuronFromZTK, NULL },
   { ZTK_KEY_NEUZ_CONNECT, -1, _nzNetConnectFromZTK, NULL },
 };
@@ -524,7 +524,7 @@ static void *_nzNetFromZTK(void *net, int i, void *arg, ZTK *ztk){
   return nzNetFromZTK( (nzNet *)net, ztk );
 }
 
-static ZTKPrp __ztk_prp_tag_neuralnetwork[] = {
+static const ZTKPrp __ztk_prp_tag_neuralnetwork[] = {
   { ZTK_TAG_NEUZ_NETWORK, -1, _nzNetFromZTK, NULL },
 };
 
