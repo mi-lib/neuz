@@ -1,3 +1,4 @@
+2024.11.12. Modified .gitignore. [all]
 2024.11.11. Added const qualifiers to __ztk_prp_key_neuralnetwork and __ztk_prp_tag_neuralnetwork. [neuz_neuron]
 2024.11. 9. Defined ZTK_KEY_NEUZ_NEURON and ZTK_KEY_NEUZ_CONNECT as "neuron" and "connect", respectively. [neuz_neuron]
 2024.11. 9. Renamed NZ_NET_TAG to ZTK_TAG_NEUZ_NETWORK and redefined it as "neuz::neuralnetwork". [neuz_neuron]
