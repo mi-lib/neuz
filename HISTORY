@@ -1,3 +1,6 @@
+2025.04.29. Modified nzNetFromZTK and nzNetReadZTK to apply new specifications of ZTKEvalTag and ZTKEvalKey. [neuz_neuron]
+2025.04.29. Modified makefile to conform to new specification of zeda-makefile-gen. [all]
+2025.04.29. Modified makefile in example. [example]
 2024.11.12. Modified .gitignore. [all]
 2024.11.11. Added const qualifiers to __ztk_prp_key_neuralnetwork and __ztk_prp_tag_neuralnetwork. [neuz_neuron]
 2024.11. 9. Defined ZTK_KEY_NEUZ_NEURON and ZTK_KEY_NEUZ_CONNECT as "neuron" and "connect", respectively. [neuz_neuron]

@@ -1,14 +1,14 @@
-INCLUDE = `zx11-config -I` `neuz-config -I`
-LIB = `zx11-config -L` `neuz-config -L`
+TARGET=$(shell ls *.c | xargs -i basename {} .c | tr -s "\n" " ") $(shell ls *.cpp | xargs -i basename {} .cpp | tr -s "\n" " ")
 
-LINK = `zx11-config -l` `neuz-config -l`
 CC = gcc
-CFLAGS = -Wall -ansi -O3 $(LIB) $(INCLUDE)
+CFLAGS = -Wall -ansi -O3 $(LIB) $(INCLUDE) `zx11-config --cflags` `neuz-config --cflags`
+LINK = `zx11-config -l` `neuz-config -l`
 
-LINKCXX = `zx11-config -lcpp` `neuz-config -lcpp`
 CXX = g++
-CXXFLAGS = -Wall -std=c++17 -O3 $(LIB) $(INCLUDE)
+CXXFLAGS = -Wall -std=c++17 -O3 $(LIB) $(INCLUDE) `zx11-config --cflags` `neuz-config --cflags`
+LINKCXX = `zx11-config -lcpp` `neuz-config -lcpp`
 
+all: $(TARGET)
 %: %.c
 	$(CC) $(CFLAGS) -o $@ $< $(LINK)
 %: %.cpp
