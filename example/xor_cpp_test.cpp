@@ -7,8 +7,8 @@ double train(nzNet &net, zVec input, zVec output, zVec des, int i1, int i2, int 
   zVecSetElemList( des, (double)oo, (double)oa, (double)on, (double)ox );
   net.propagate( input );
   net.getOutput( output );
-  net.backpropagate( input, des, nzLossGradSquredSum );
-  return nzLossSquredSum( output, des );
+  net.backpropagate( input, des, nzLossGradSquareSum );
+  return nzLossSquareSum( output, des );
 }
 
 void test(nzNet &net, zVec input, zVec output, int i1, int i2)

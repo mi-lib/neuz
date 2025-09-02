@@ -13,9 +13,9 @@
 
 __BEGIN_DECLS
 
-/*! \brief squared-sum loss function */
-__NEUZ_EXPORT double nzLossSquredSum(zVec v, zVec v_ref);
-__NEUZ_EXPORT double nzLossGradSquredSum(zVec v, zVec v_ref, int i);
+/*! \brief sum-of-squares loss function */
+__NEUZ_EXPORT double nzLossSquareSum(zVec v, zVec v_ref);
+__NEUZ_EXPORT double nzLossGradSquareSum(zVec v, zVec v_ref, int i);
 
 __END_DECLS
 

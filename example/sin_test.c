@@ -13,9 +13,9 @@ double train(nzNet *net, zVec input, zVec output, zVec outref, double theta)
 {
   train_ref( input, outref, theta );
   nzNetPropagate( net, input );
-  nzNetBackPropagate( net, input, outref, nzLossGradSquredSum );
+  nzNetBackPropagate( net, input, outref, nzLossGradSquareSum );
   nzNetGetOutput( net, output );
-  return nzLossSquredSum( output, outref );
+  return nzLossSquareSum( output, outref );
 }
 
 void test(nzNet *net, zVec input, zVec output, zVec outref, double theta)

@@ -11,9 +11,9 @@ double train(nzNet *net, const zVec input, zVec output, zVec outref)
 {
   train_ref( input, outref );
   nzNetPropagate( net, input );
-  nzNetBackPropagate( net, input, outref, nzLossGradSquredSum );
+  nzNetBackPropagate( net, input, outref, nzLossGradSquareSum );
   nzNetGetOutput( net, output );
-  return nzLossSquredSum( output, outref );
+  return nzLossSquareSum( output, outref );
 }
 
 void test(nzNet *net, const zVec input, zVec output, zVec outref)
