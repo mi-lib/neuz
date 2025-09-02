@@ -12,5 +12,6 @@
 #define __NEUZ_H__
 
 #include <neuz/neuz_neuron.h>
+#include <neuz/neuz_loss.h>
 
 #endif /* __NEUZ_H__ */

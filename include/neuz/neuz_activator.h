@@ -20,6 +20,9 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzActivator ){
   double (* df)(double); /* derivative function */
 };
 
+/*! \brief identity function */
+__NEUZ_EXPORT nzActivator nz_activator_ident;
+
 /*! \brief step function */
 __NEUZ_EXPORT nzActivator nz_activator_step;
 

@@ -1,15 +1,5 @@
 #include <neuz/neuz.h>
 
-double loss(zVec output, zVec des)
-{
-  return 0.5 * zVecSqrDist( output, des );
-}
-
-double lossgrad(zVec output, zVec des, int i)
-{
-  return zVecElem(output,i) - zVecElem(des,i);
-}
-
 zVec train_ref(zVec input, double theta)
 {
   double s, c;
@@ -22,9 +12,9 @@ double train(nzNet *net, zVec input, zVec output, double theta)
 {
   train_ref( input, theta );
   nzNetPropagate( net, input );
-  nzNetBackPropagate( net, input, input, lossgrad );
+  nzNetBackPropagate( net, input, input, nzLossGradSquredSum );
   nzNetGetOutput( net, output );
-  return loss( output, input );
+  return nzLossSquredSum( output, input );
 }
 
 void test(nzNet *net, zVec input, zVec output, double theta)
@@ -50,6 +40,7 @@ int main(int argc, char *argv[])
   nzNet nn;
   zVec input, output;
   double l;
+  double rate;
   int i, j, n_train, n_batch;
 
   zRandInit();
@@ -73,7 +64,7 @@ int main(int argc, char *argv[])
     nzNetConnectGroup( &nn, 3, 4 );
   }
   /* train */
-  for( i=0; i<n_train; i++ ){
+  for( rate=RATE, i=0; i<n_train; i++, rate*=0.9 ){
     nzNetInitGrad( &nn );
     for( l=0, j=0; j<n_batch; j++ )
       l += train( &nn, input, output, zRandF(-zPI,zPI) );

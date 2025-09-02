@@ -1,15 +1,5 @@
 #include <neuz/neuz.h>
 
-double loss(zVec output, zVec outref)
-{
-  return 0.5 * zVecSqrDist( output, outref );
-}
-
-double lossgrad(zVec output, zVec outref, int i)
-{
-  return zVecElem(output,i) - zVecElem(outref,i);
-}
-
 zVec train_ref(zVec input, zVec outref, double theta)
 {
   double s, c;
@@ -23,9 +13,9 @@ double train(nzNet *net, zVec input, zVec output, zVec outref, double theta)
 {
   train_ref( input, outref, theta );
   nzNetPropagate( net, input );
-  nzNetBackPropagate( net, input, outref, lossgrad );
+  nzNetBackPropagate( net, input, outref, nzLossGradSquredSum );
   nzNetGetOutput( net, output );
-  return loss( output, outref );
+  return nzLossSquredSum( output, outref );
 }
 
 void test(nzNet *net, zVec input, zVec output, zVec outref, double theta)
@@ -42,15 +32,16 @@ void test(nzNet *net, zVec input, zVec output, zVec outref, double theta)
 #define N1 5
 #define N2 2
 
-#define N_TRAIN 1000000
-#define N_BATCH      10
-#define RATE          0.05
+#define N_TRAIN 10000
+#define N_BATCH    10
+#define RATE        0.05
 
 int main(int argc, char *argv[])
 {
   nzNet nn;
   zVec input, output, outref;
   double l;
+  double rate;
   int i, j, n_train, n_batch;
 
   zRandInit();
@@ -71,13 +62,13 @@ int main(int argc, char *argv[])
     nzNetConnectGroup( &nn, 1, 2 );
   }
   /* train */
-  for( i=0; i<n_train; i++ ){
+  for( rate=RATE, i=0; i<n_train; i++, rate*=0.9 ){
     nzNetInitGrad( &nn );
     for( l=0, j=0; j<n_batch; j++ )
       l += train( &nn, input, output, outref, zRandF(-zPI,zPI) );
     eprintf( "%03d %.10g\n", i, l );
     if( zIsTiny( l ) ) break;
-    nzNetTrainSDM( &nn, RATE );
+    nzNetTrainSDM( &nn, rate );
   }
   /* check */
   for( l=0, j=0; j<100; j++ )

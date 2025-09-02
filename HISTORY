@@ -1,3 +1,5 @@
+2025.09.02. Added nz_activator_ident. [neuz_activator]
+2025.09.02. Added neuz_loss. [neuz, neuz_loss]
 2025.04.29. Modified nzNetFromZTK and nzNetReadZTK to apply new specifications of ZTKEvalTag and ZTKEvalKey. [neuz_neuron]
 2025.04.29. Modified makefile to conform to new specification of zeda-makefile-gen. [all]
 2025.04.29. Modified makefile in example. [example]

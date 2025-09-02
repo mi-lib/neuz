@@ -1,24 +1,14 @@
 #include <iostream>
 #include <neuz/neuz.h>
 
-double loss(zVec output, zVec des)
-{
-  return 0.5 * zVecSqrDist( output, des );
-}
-
-double lossgrad(zVec output, zVec des, int i)
-{
-  return zVecElem(output,i) - zVecElem(des,i);
-}
-
 double train(nzNet &net, zVec input, zVec output, zVec des, int i1, int i2, int oo, int oa, int on, int ox)
 {
   zVecSetElemList( input, (double)i1, (double)i2 );
   zVecSetElemList( des, (double)oo, (double)oa, (double)on, (double)ox );
   net.propagate( input );
   net.getOutput( output );
-  net.backpropagate( input, des, lossgrad );
-  return loss( output, des );
+  net.backpropagate( input, des, nzLossGradSquredSum );
+  return nzLossSquredSum( output, des );
 }
 
 void test(nzNet &net, zVec input, zVec output, int i1, int i2)
@@ -43,6 +33,7 @@ int main(int argc, char *argv[])
   nzNet nn;
   zVec input, output, des;
   double l;
+  double rate;
   int i, n_train;
 
   zRandInit();
@@ -62,7 +53,7 @@ int main(int argc, char *argv[])
     nn.connectGroup( 1, 2 );
   }
   /* train */
-  for( i=0; i<n_train; i++ ){
+  for( rate=RATE, i=0; i<n_train; i++, rate*=0.9 ){
     nn.initGrad();
     l  = train( nn, input, output, des, 0, 0, 0, 0, 1, 0 );
     l += train( nn, input, output, des, 1, 0, 1, 0, 1, 1 );

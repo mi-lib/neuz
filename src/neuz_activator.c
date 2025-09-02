@@ -6,6 +6,16 @@
 
 #include <neuz/neuz_activator.h>
 
+/* identity function */
+static double _nzActivatorIdent(double val){ return val; }
+static double _nzActivatorIdentDif(double val){ return 1; }
+
+nzActivator nz_activator_ident = {
+  "identity",
+  _nzActivatorIdent,
+  _nzActivatorIdentDif
+};
+
 /* step function */
 static double _nzActivatorStep(double val){ return val >= 0 ? 1 : 0; }
 static double _nzActivatorStepDif(double val){ return 0; /* case val=0 is ignored. */ }
@@ -63,6 +73,7 @@ nzActivator nz_activator_softplus = {
 /* add the handle to the following list when you create a new activator function. */
 #define NZ_ACTIVATOR_ARRAY \
   nzActivator *_nz_activator[] = {\
+    &nz_activator_ident,\
     &nz_activator_step,\
     &nz_activator_sigmoid,\
     &nz_activator_relu,\

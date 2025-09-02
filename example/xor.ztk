@@ -1,43 +1,43 @@
 [neuz::neuralnetwork]
 neuron: 0 0 nil 0.5095180458
 neuron: 0 1 nil 0.2147240642
-neuron: 1 0 sigmoid -2.673452316
-connect: 0 0 1 0 1.776233999
-connect: 0 1 1 0 1.774505526
-neuron: 1 1 sigmoid 0.8676348524
-connect: 0 0 1 1 -1.211190529
-connect: 0 1 1 1 -1.210251384
-neuron: 1 2 sigmoid -0.8401842468
-connect: 0 0 1 2 -0.5472950243
-connect: 0 1 1 2 -0.183650457
-neuron: 1 3 sigmoid -0.7506049696
-connect: 0 0 1 3 1.697477161
-connect: 0 1 1 3 1.731633287
-neuron: 1 4 sigmoid -1.427391478
-connect: 0 0 1 4 0.9509609671
-connect: 0 1 1 4 0.9497720628
-neuron: 2 0 sigmoid 0.4824835001
-connect: 1 0 2 0 1.054115532
-connect: 1 1 2 0 -2.422842648
-connect: 1 2 2 0 -0.4206938466
-connect: 1 3 2 0 1.852051435
-connect: 1 4 2 0 0.4368276653
-neuron: 2 1 sigmoid -1.190046514
-connect: 1 0 2 1 2.00095243
-connect: 1 1 2 1 -1.477827858
-connect: 1 2 2 1 0.3543654782
-connect: 1 3 2 1 -0.6817232058
-connect: 1 4 2 1 1.992188571
-neuron: 2 2 sigmoid 1.257526223
-connect: 1 0 2 2 -2.83920652
-connect: 1 1 2 2 2.03366366
-connect: 1 2 2 2 -0.4296507205
-connect: 1 3 2 2 0.3178874415
-connect: 1 4 2 2 -0.6820836331
-neuron: 2 3 sigmoid -0.08143996112
-connect: 1 0 2 3 -3.57522448
-connect: 1 1 2 3 -1.839959119
-connect: 1 2 2 3 -0.6674228761
-connect: 1 3 2 3 2.501842017
-connect: 1 4 2 3 -0.836278664
+neuron: 1 0 sigmoid -2.675515987
+connect: 0 0 1 0 1.7776008
+connect: 0 1 1 0 1.775854163
+neuron: 1 1 sigmoid 0.8680023588
+connect: 0 0 1 1 -1.212277181
+connect: 0 1 1 1 -1.211357125
+neuron: 1 2 sigmoid -0.8399679353
+connect: 0 0 1 2 -0.5473487084
+connect: 0 1 1 2 -0.1840515286
+neuron: 1 3 sigmoid -0.7514057825
+connect: 0 0 1 3 1.699174621
+connect: 0 1 1 3 1.733140491
+neuron: 1 4 sigmoid -1.430670201
+connect: 0 0 1 4 0.9531095457
+connect: 0 1 1 4 0.9518976054
+neuron: 2 0 sigmoid 0.4822129906
+connect: 1 0 2 0 1.054232792
+connect: 1 1 2 0 -2.426472781
+connect: 1 2 2 0 -0.4208054963
+connect: 1 3 2 0 1.856126546
+connect: 1 4 2 0 0.4373778955
+neuron: 2 1 sigmoid -1.191948793
+connect: 1 0 2 1 2.005027915
+connect: 1 1 2 1 -1.479090387
+connect: 1 2 2 1 0.3543099549
+connect: 1 3 2 1 -0.6834904917
+connect: 1 4 2 1 1.995179633
+neuron: 2 2 sigmoid 1.259986266
+connect: 1 0 2 2 -2.844356544
+connect: 1 1 2 2 2.035265559
+connect: 1 2 2 2 -0.429579702
+connect: 1 3 2 2 0.3201821515
+connect: 1 4 2 2 -0.6858565465
+neuron: 2 3 sigmoid -0.08209374068
+connect: 1 0 2 3 -3.579838648
+connect: 1 1 2 3 -1.843264777
+connect: 1 2 2 3 -0.6675151761
+connect: 1 3 2 3 2.506169338
+connect: 1 4 2 3 -0.8393978629
 

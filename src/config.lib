@@ -1,2 +1,3 @@
 OBJ=neuz_activator.o \
+	neuz_loss.o \
 	neuz_neuron.o
