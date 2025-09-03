@@ -38,9 +38,6 @@ int main(int argc, char *argv[])
   zRandInit();
 
   n_train = argc > 1 ? atoi( argv[1] ) : N_TRAIN;
-  input  = zVecAlloc( N0 );
-  output = zVecAlloc( N2 );
-  des = zVecAlloc( N2 );
 
   /* read or create network */
   if( !nzNetReadZTK( &nn, XOR_ZTK ) ){
@@ -51,6 +48,9 @@ int main(int argc, char *argv[])
     nzNetConnectGroup( &nn, 0, 1 );
     nzNetConnectGroup( &nn, 1, 2 );
   }
+  input  = zVecAlloc( nzNetInputSize(&nn) );
+  output = zVecAlloc( nzNetOutputSize(&nn) );
+  des = zVecAlloc( nzNetOutputSize(&nn) );
   /* train */
   for( rate=RATE, i=0; i<n_train; i++, rate*=0.9 ){
     nzNetInitGrad( &nn );

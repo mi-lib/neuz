@@ -145,7 +145,6 @@ inline void nzNeuronGroup::fprint(FILE *fp){ nzNeuronGroupFPrint( fp, this ); }
 #endif /* __cplusplus */
 
 /*! \brief neural network class */
-ZDECL_STRUCT( nzNetCell );
 ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNetCell ){
   nzNetCell *prev, *next;
   nzNeuronGroup data;
@@ -163,6 +162,8 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNet ){
   void destroy();
   nzNeuronGroup *inputLayer();
   nzNeuronGroup *outputLayer();
+  int inputSize() const;
+  int outputSize() const;
   bool addGroup(int num);
   bool addGroup(int num, nzActivator *activator);
   nzNeuronGroup *findGroup(int id);
@@ -187,6 +188,9 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNet ){
 
 #define nzNetInputLayer(net)  ( &zListTail(net)->data )
 #define nzNetOutputLayer(net) ( &zListHead(net)->data )
+
+#define nzNetInputSize(net)  zListSize( &nzNetInputLayer(net)->list )
+#define nzNetOutputSize(net) zListSize( &nzNetOutputLayer(net)->list )
 
 /*! \brief initialize a neural network. */
 #define nzNetInit(net) zListInit( net )
@@ -260,6 +264,8 @@ inline void nzNet::init(){ nzNetInit( this ); }
 inline void nzNet::destroy(){ nzNetDestroy( this ); }
 inline nzNeuronGroup *nzNet::inputLayer(){ return nzNetInputLayer( this ); }
 inline nzNeuronGroup *nzNet::outputLayer(){ return nzNetOutputLayer( this ); }
+inline int nzNet::inputSize() const { return nzNetInputSize( this ); }
+inline int nzNet::outputSize() const { return nzNetOutputSize( this ); }
 inline bool nzNet::addGroup(int num){ return nzNetAddGroup( this, num ); }
 inline bool nzNet::addGroup(int num, nzActivator *activator){ return nzNetAddGroupSetActivator( this, num, activator ); }
 inline nzNeuronGroup *nzNet::findGroup(int id){ return nzNetFindGroup( this, id ); }

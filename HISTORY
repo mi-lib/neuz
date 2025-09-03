@@ -1,3 +1,5 @@
+2025.09.03. Added nzNetInputSize and nzNetOutputSize. [neuz_neuron]
+2025.09.03. Removed ZDECL_STRUCT for nzNetCell. [neuz_neuron]
 2025.09.02. Corrected misspells. [neuz_activator, example]
 2025.09.02. Added nz_activator_ident. [neuz_activator, example]
 2025.09.02. Added neuz_loss. [neuz, neuz_loss]

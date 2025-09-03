@@ -47,8 +47,6 @@ int main(int argc, char *argv[])
 
   n_train = argc > 1 ? atoi( argv[1] ) : N_TRAIN;
   n_batch = argc > 2 ? atoi( argv[2] ) : N_BATCH;
-  input  = zVecAlloc( N0 );
-  output = zVecAlloc( N0 );
 
   /* read or create network */
   if( !nzNetReadZTK( &nn, SIN_AE_ZTK ) ){
@@ -63,6 +61,8 @@ int main(int argc, char *argv[])
     nzNetConnectGroup( &nn, 2, 3 );
     nzNetConnectGroup( &nn, 3, 4 );
   }
+  input  = zVecAlloc( nzNetInputSize(&nn) );
+  output = zVecAlloc( nzNetInputSize(&nn) );
   /* train */
   for( rate=RATE, i=0; i<n_train; i++, rate*=0.9 ){
     nzNetInitGrad( &nn );
