@@ -11,8 +11,6 @@
 
 #include <neuz/neuz_activator.h>
 
-__BEGIN_DECLS
-
 /*! \brief axon class */
 ZDECL_STRUCT( nzAxon );
 ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzAxon ){
@@ -20,7 +18,14 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzAxon ){
   void *upstream;
   double _dw;
   nzAxon *next;
+#ifdef __cplusplus
+ public:
+  nzAxon() : weight{0}, upstream{nullptr}, _dw{0}, next{nullptr} {}
+  ~nzAxon() {}
+#endif /* __cplusplus */
 };
+
+#define NEUZ_NEURON_ISOLATED (-1)
 
 /*! \brief unit neuron class */
 ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNeuronData ){
@@ -34,6 +39,11 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNeuronData ){
   double _v;
   nzActivator *activator;
   nzAxon *axon;
+#ifdef __cplusplus
+ public:
+  nzNeuronData() : gid{NEUZ_NEURON_ISOLATED}, nid{NEUZ_NEURON_ISOLATED}, input{0}, output{0}, bias{0}, _db{0}, _p{0}, _v{0}, activator{nullptr}, axon{nullptr} {}
+  ~nzNeuronData() {}
+#endif /* __cplusplus */
 };
 
 /*! \brief neuron list class */
@@ -42,7 +52,9 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNeuron ){
   nzNeuron *prev, *next;
   nzNeuronData data;
 #ifdef __cplusplus
+ public:
   nzNeuron() : prev{this}, next{this} {}
+  ~nzNeuron() {}
   nzNeuron *init(int gid, int nid);
   void destroy();
   bool connectTo(nzNeuron *nd, double weight);
@@ -50,6 +62,8 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNeuron ){
   void fprint(FILE *fp);
 #endif /* __cplusplus */
 };
+
+__BEGIN_DECLS
 
 /*! \brief initialize a new neuron unit. */
 __NEUZ_EXPORT nzNeuron *nzNeuronInit(nzNeuron *neuron, int gid, int nid);
@@ -65,6 +79,8 @@ __NEUZ_EXPORT double nzNeuronPropagate(nzNeuron *neuron);
 
 /*! \brief print a neuron unit. */
 __NEUZ_EXPORT void nzNeuronFPrint(FILE *fp, nzNeuron *neuron);
+
+__END_DECLS
 
 #ifdef __cplusplus
 inline nzNeuron *nzNeuron::init(int gid, int nid){ return nzNeuronInit( this, gid, nid ); }
@@ -101,6 +117,8 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNeuronGroup ){
 #endif /* __cplusplus */
 };
 
+__BEGIN_DECLS
+
 /*! \brief initialize a neuron group. */
 __NEUZ_EXPORT nzNeuronGroup *nzNeuronGroupInit(nzNeuronGroup *ng, int id);
 
@@ -130,6 +148,8 @@ __NEUZ_EXPORT void nzNeuronGroupPropagate(nzNeuronGroup *ng);
 
 /*! \brief print a neuron group. */
 __NEUZ_EXPORT void nzNeuronGroupFPrint(FILE *fp, nzNeuronGroup *ng);
+
+__END_DECLS
 
 #ifdef __cplusplus
 inline nzNeuronGroup *nzNeuronGroup::init(int id){ return nzNeuronGroupInit( this, id ); }
@@ -185,6 +205,8 @@ ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzNet ){
   bool writeZTK(const char filename[]);
 #endif /* __cplusplus */
 };
+
+__BEGIN_DECLS
 
 #define nzNetInputLayer(net)  ( &zListTail(net)->data )
 #define nzNetOutputLayer(net) ( &zListHead(net)->data )
@@ -259,6 +281,8 @@ __NEUZ_EXPORT void nzNetFPrintZTK(FILE *fp, nzNet *net);
 /*! \brief write a neural network to a ZTK format file. */
 __NEUZ_EXPORT bool nzNetWriteZTK(nzNet *net, const char filename[]);
 
+__END_DECLS
+
 #ifdef __cplusplus
 inline void nzNet::init(){ nzNetInit( this ); }
 inline void nzNet::destroy(){ nzNetDestroy( this ); }
@@ -285,7 +309,5 @@ inline nzNet *nzNet::readZTK(const char filename[]){ return nzNetReadZTK( this, 
 inline void nzNet::fprintZTK(FILE *fp){ nzNetFPrintZTK( fp, this ); }
 inline bool nzNet::writeZTK(const char filename[]){ return nzNetWriteZTK( this, filename ); }
 #endif /* __cplusplus */
-
-__END_DECLS
 
 #endif /* __NEUZ_NEURON_H__ */

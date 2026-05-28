@@ -1,3 +1,7 @@
+2026.05.27. Added a macro NEUZ_DEF_ACTIVATOR. [neuz_activator]
+2026.05.27. Added methods of nzAxon and nzNeuron for C++. [neuz_neuron, neuz_activator]
+2026.05.27. Relocated __BEGIN_DECLS and __END_DECLS. [neuz_neuron, neuz_activator]
+2026.05.27. Added a macro NEUZ_NEURON_ISOLATED. [neuz_neuron]
 2025.12.26. Replaced -i option of xargs in example/makefile to -I (thanks to Naoki Wakisaka). [example]
 2025.09.03. Added nzNetInputSize and nzNetOutputSize. [neuz_neuron]
 2025.09.03. Removed ZDECL_STRUCT for nzNetCell. [neuz_neuron]

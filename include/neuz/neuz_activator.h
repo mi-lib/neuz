@@ -11,14 +11,28 @@
 
 #include <neuz/neuz_misc.h>
 
-__BEGIN_DECLS
-
 /*! \brief activator function class */
 ZDEF_STRUCT( __NEUZ_CLASS_EXPORT, nzActivator ){
   const char *typestr;   /* a string to represent type */
   double (* f)(double);  /* function */
   double (* df)(double); /* derivative function */
+#ifdef __cplusplus
+ public:
+  nzActivator() : typestr{nullptr}, f{nullptr}, df{nullptr} {}
+  nzActivator(const char *_typestr, double (* _f)(double), double (* _df)(double)) : typestr{_typestr}, f{_f}, df{_df} {}
+  ~nzActivator() {}
+#endif /* __cplusplus */
 };
+
+#ifdef __cplusplus
+#define NEUZ_DEF_ACTIVATOR( name, typestr, function, dfunction ) \
+nzActivator name{ typestr, function, dfunction }
+#else
+#define NEUZ_DEF_ACTIVATOR( name, typestr, function, dfunction ) \
+nzActivator name = { typestr, function, dfunction }
+#endif /* __cplusplus */
+
+__BEGIN_DECLS
 
 /*! \brief identity function */
 __NEUZ_EXPORT nzActivator nz_activator_ident;

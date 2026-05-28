@@ -10,21 +10,21 @@
 static double _nzActivatorIdent(double val){ return val; }
 static double _nzActivatorIdentDif(double val){ return 1; }
 
-nzActivator nz_activator_ident = {
+NEUZ_DEF_ACTIVATOR( nz_activator_ident,
   "identity",
   _nzActivatorIdent,
   _nzActivatorIdentDif
-};
+);
 
 /* step function */
 static double _nzActivatorStep(double val){ return val >= 0 ? 1 : 0; }
 static double _nzActivatorStepDif(double val){ return 0; /* case val=0 is ignored. */ }
 
-nzActivator nz_activator_step = {
+NEUZ_DEF_ACTIVATOR( nz_activator_step,
   "step",
   _nzActivatorStep,
   _nzActivatorStepDif
-};
+);
 
 /* sigmoid function */
 static double _nzActivatorSigmoid(double val){ return zSigmoid( 4*val ); }
@@ -34,41 +34,41 @@ static double _nzActivatorSigmoidDif(double val){
   return 4 * u / zSqr( 1 + u );
 }
 
-nzActivator nz_activator_sigmoid = {
+NEUZ_DEF_ACTIVATOR( nz_activator_sigmoid,
   "sigmoid",
   _nzActivatorSigmoid,
   _nzActivatorSigmoidDif
-};
+);
 
 /* rectified linear unit function */
 static double _nzActivatorReLU(double val){ return zMax( val, 0 ); }
 static double _nzActivatorReLUDif(double val){ return val >= 0 ? 1 : 0; /* case val=0 is ignored. */ }
 
-nzActivator nz_activator_relu = {
+NEUZ_DEF_ACTIVATOR( nz_activator_relu,
   "relu",
   _nzActivatorReLU,
   _nzActivatorReLUDif
-};
+);
 
 /* blunt ReLU */
 static double _nzActivatorBluntReLU(double val){ return 0.5 * ( val + sqrt( val*val + 1 ) ); }
 static double _nzActivatorBluntReLUDif(double val){ return 0.5 + 0.5*val / sqrt( val*val + 1 ); }
 
-nzActivator nz_activator_blunt_relu = {
+NEUZ_DEF_ACTIVATOR( nz_activator_blunt_relu,
   "bluntrelu",
   _nzActivatorBluntReLU,
   _nzActivatorBluntReLUDif
-};
+);
 
 /* softplus */
 static double _nzActivatorSoftplus(double val){ return log( 1 + exp(val) ); }
 static double _nzActivatorSoftplusDif(double val){ return 1.0 / ( 1 + exp(-val) ); }
 
-nzActivator nz_activator_softplus = {
+NEUZ_DEF_ACTIVATOR( nz_activator_softplus,
   "softplus",
   _nzActivatorSoftplus,
   _nzActivatorSoftplusDif
-};
+);
 
 /* add the handle to the following list when you create a new activator function. */
 #define NZ_ACTIVATOR_ARRAY \
